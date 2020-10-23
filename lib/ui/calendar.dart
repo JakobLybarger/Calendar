@@ -38,9 +38,12 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       body: SafeArea(
         child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           child: Column(
             children: <Widget>[
               _buildCalendar(),
+              Expanded(child: _eventList()),
             ],
           ),
         ),
@@ -63,6 +66,51 @@ class _CalendarState extends State<Calendar> {
       headerStyle: HeaderStyle(
         centerHeaderTitle: true,
       ),
+      onDaySelected: (day, events, holidays) {
+        setState(() {
+          _addedEvents = events;
+        });
+      },
+      builders: CalendarBuilders(
+
+      ),
+    );
+  }
+
+  // Show all of the events of the selected date.
+  Widget _eventList() {
+    return ListView(
+      children: _addedEvents.map((event) => SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height/12,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height / 100,
+            left: MediaQuery.of(context).size.width / 60,
+            right: MediaQuery.of(context).size.width / 60,
+          ),
+          padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height / 45,
+          left: 5,
+          right: 5,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.deepPurpleAccent, Colors.deepPurple,],
+            ),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          
+          child: Text(
+            event,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.height / 40
+            ),
+            textAlign: TextAlign.left,
+            
+          ),
+        )
+      )).toList(),
     );
   }
 
