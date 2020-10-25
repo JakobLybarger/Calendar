@@ -49,8 +49,11 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.deepPurpleAccent,
+        child: Icon(
+          Icons.add,
+          color: Colors.deepOrangeAccent,
+        ),
+        backgroundColor: Colors.white,
         onPressed: _addEventDialog,
       ),
     );
@@ -73,7 +76,82 @@ class _CalendarState extends State<Calendar> {
         });
       },
       builders: CalendarBuilders(
-        
+        markersBuilder: (context, date, events, holidays) {
+          final children = <Widget>[];
+
+          if(events.isNotEmpty) {
+            children.add(
+              Positioned(
+                right: 3, bottom: 0,
+                child: _marker(date, events),
+              ),
+            );
+          }
+
+          if (holidays.isNotEmpty) {
+            children.add(
+              Positioned(
+                left: 3,
+                bottom: 0,
+                child: _marker(date, events),
+              ),
+            );
+          }
+          return children;
+        },
+        todayDayBuilder: (context, date, events){
+          return Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              color: Colors.deepPurpleAccent,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Text(
+              date.day.toString(),
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          );
+        },
+        selectedDayBuilder: (context, date, events) {
+          return Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+              color: Colors.deepPurpleAccent,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: Text(
+              date.day.toString(),
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          );
+        }
+      ),
+    );
+  }
+
+  // Design for the event and holiday marker.
+  Widget _marker(DateTime date, List events) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4.0),
+        color: Colors.deepOrangeAccent
+      ),
+      width: 16.0,
+      height: 16.0,
+      child: Center(
+        child: Text(
+          '${events.length}',
+          style: TextStyle().copyWith(
+            color: Colors.white,
+            fontSize: 12.0,
+          ),
+        ),
       ),
     );
   }
@@ -96,7 +174,7 @@ class _CalendarState extends State<Calendar> {
           ),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.deepPurpleAccent, Colors.deepPurple,],
+              colors: [Colors.deepPurpleAccent, Colors.deepPurple],
             ),
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -108,7 +186,6 @@ class _CalendarState extends State<Calendar> {
               fontSize: MediaQuery.of(context).size.height / 40
             ),
             textAlign: TextAlign.left,
-            
           ),
         )
       )).toList(),
