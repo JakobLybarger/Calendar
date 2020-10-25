@@ -59,6 +59,7 @@ class _CalendarState extends State<Calendar> {
   // The calendar widget and its desired features/design.
   Widget _buildCalendar() {
     return TableCalendar(
+      events: _events,
       calendarController: _calendarController,
       availableCalendarFormats: const {
         CalendarFormat.month: 'Month',
@@ -72,7 +73,7 @@ class _CalendarState extends State<Calendar> {
         });
       },
       builders: CalendarBuilders(
-
+        
       ),
     );
   }
