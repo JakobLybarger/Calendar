@@ -191,12 +191,20 @@ class _CalendarState extends State<Calendar> {
   // Dialog to allow user to enter event for date.
   _addEventDialog() async {
     await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
         content: TextField(
           controller: _eventController,
         ),
         actions: [
+          FlatButton(
+            child: Text("Close"),
+            onPressed: () {
+              _eventController.clear();
+              Navigator.pop(context);
+            },
+          ),
           FlatButton(
             child: Text("Add"),
             onPressed: () {
@@ -213,20 +221,18 @@ class _CalendarState extends State<Calendar> {
                   _eventController.text
                 ];
               }
-              encode(_events);
               // Clear controller and close alert dialog.
               _eventController.clear();
               Navigator.pop(context);
+              // Set _addedEvents equal to _events at selected day.
+              setState(() {
+                _addedEvents = _events[_calendarController.selectedDay];
+              });
             },
           ),
         ],
       ),
     );
-
-    // Set _addedEvents equal to _events at selected day.
-    setState(() {
-      _addedEvents = _events[_calendarController.selectedDay];
-    });
   }
 
   // Transform map of <DateTime, dynamic> to <String, String>
