@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'settings.dart';
+import 'help.dart';
 
 class Calendar extends StatefulWidget {
   @override
@@ -47,26 +49,53 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> _choices = ["Settings", "Help"];
+
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: <Widget>[
-            _buildCalendar(),
-            Expanded(child: _eventList()),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: <Widget>[
+              _buildCalendar(),
+              Expanded(child: _eventList()),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.deepOrangeAccent,
+          ),
+          backgroundColor: Colors.white,
+          onPressed: _addEventDialog,
+        ),
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurpleAccent,
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == "settings") {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Settings()));
+                } else if (value == "help") {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Help()));
+                }
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: "settings",
+                  child: Text("Settings"),
+                ),
+                PopupMenuItem(
+                  value: "help",
+                  child: Text("Help"),
+                ),
+              ],
+            ),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.deepOrangeAccent,
-        ),
-        backgroundColor: Colors.white,
-        onPressed: _addEventDialog,
-      ),
-    );
+        ));
   }
 
   // The calendar widget and its desired features/design.
