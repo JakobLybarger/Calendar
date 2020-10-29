@@ -13,9 +13,10 @@ class _CalendarState extends State<Calendar> {
       _events; // Map of each date and the events that day.
   List<dynamic> _addedEvents; // List of events to be added.
 
-  // Controller required to update events, holidays, etc.
+  // Controllers and shared preferences declaration
   CalendarController _calendarController;
   TextEditingController _eventController;
+  SharedPreferences prefs;
 
   // Overridden to make initialize the controllers.
   @override
@@ -25,6 +26,15 @@ class _CalendarState extends State<Calendar> {
     _eventController = TextEditingController();
     _events = {};
     _addedEvents = [];
+    initialize();
+  }
+
+  initialize() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _events = Map<DateTime, List<dynamic>>.from(
+          decode(json.decode(prefs.getString("events") ?? "{}")));
+    });
   }
 
   // Overridden to ensure dispose of controllers.
@@ -221,6 +231,8 @@ class _CalendarState extends State<Calendar> {
                   _eventController.text
                 ];
               }
+              // Save list to shared preferences
+              prefs.setString("events", json.encode(encode(_events)));
               // Clear controller and close alert dialog.
               _eventController.clear();
               Navigator.pop(context);
@@ -235,9 +247,9 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  // Transform map of <DateTime, dynamic> to <String, String>
-  Map<String, String> encode(Map<DateTime, dynamic> map) {
-    Map<String, String> result = {};
+  // Transform map of <DateTime, dynamic> to <String, dynamic>
+  Map<String, dynamic> encode(Map<DateTime, dynamic> map) {
+    Map<String, dynamic> result = {};
     map.forEach((key, value) {
       result[key.toString()] = map[key];
     });
@@ -245,12 +257,12 @@ class _CalendarState extends State<Calendar> {
     return result;
   }
 
-  Map<DateTime, dynamic> decode(Map<String, String> map) {
+  // Transform map of <String, dynamic> to <DateTime, dynamic>
+  Map<DateTime, dynamic> decode(Map<String, dynamic> map) {
     Map<DateTime, dynamic> result = {};
     map.forEach((key, value) {
       result[DateTime.parse(key)] = map[key];
     });
-
     return result;
   }
 }
