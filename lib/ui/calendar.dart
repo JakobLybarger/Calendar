@@ -52,6 +52,7 @@ class _CalendarState extends State<Calendar> {
     List<String> _choices = ["Settings", "Help"];
 
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -198,7 +199,8 @@ class _CalendarState extends State<Calendar> {
       children: _addedEvents
           .map((event) => GestureDetector(
               onLongPress: () {
-                _addedEvents.remove(event);
+                _events[_calendarController.selectedDay].remove(event);
+                prefs.setString("events", json.encode(encode(_events)));
                 setState(() {});
               },
               child: Container(
@@ -214,9 +216,7 @@ class _CalendarState extends State<Calendar> {
                   right: 5,
                 ),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.deepPurpleAccent, Colors.deepPurple],
-                  ),
+                  color: Colors.deepPurpleAccent,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Text(
