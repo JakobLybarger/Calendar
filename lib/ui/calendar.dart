@@ -167,8 +167,12 @@ class _CalendarState extends State<Calendar> {
   Widget _eventList() {
     return ListView(
       children: _addedEvents
-          .map((event) => SafeArea(
-                  child: Container(
+          .map((event) => GestureDetector(
+              onLongPress: () {
+                _addedEvents.remove(event);
+                setState(() {});
+              },
+              child: Container(
                 height: MediaQuery.of(context).size.height / 12,
                 margin: EdgeInsets.only(
                   bottom: MediaQuery.of(context).size.height / 100,
