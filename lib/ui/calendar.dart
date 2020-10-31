@@ -49,8 +49,6 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _choices = ["Settings", "Help"];
-
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Container(
