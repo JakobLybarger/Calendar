@@ -31,6 +31,7 @@ class _CalendarState extends State<Calendar> {
     initialize();
   }
 
+  // Initialize shared preferences.
   initialize() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
